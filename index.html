@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Among Us — Ghost Observer</title>
+    <meta name="description"
+        content="Watch AI bots play Among Us on The Skeld while you spectate as a ghost. 12 bots, 2 impostors, meetings, voting, and tasks!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=31">
+</head>
+
+<body style="margin:0; padding:0;">
+    <div id="start-screen">
+        <div class="start-content">
+            <div class="game-title">AMONG US</div>
+            <div class="game-subtitle">👻 Ghost Observer Mode</div>
+
+            <div class="start-buttons">
+                <div id="play-mode-options" class="hidden">
+                    <div class="role-selection">
+                        <button id="btn-select-crew" class="role-btn">Crewmate</button>
+                        <button id="btn-select-imp" class="role-btn impostor">Impostor</button>
+                    </div>
+                </div>
+                <button id="btn-play">PLAY GAME</button>
+                <div class="setting-item">
+                    <label class="switch">
+                        <input type="checkbox" id="extra-roles-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="setting-label">Extra Roles</span>
+                </div>
+                <div class="setting-item">
+                    <label class="switch">
+                        <input type="checkbox" id="extended-colors-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="setting-label">Extended Colors (18 Bots)</span>
+                </div>
+                <button id="btn-start" class="secondary">SPECTATE</button>
+                <div class="ai-buttons">
+                    <button id="btn-ai" class="secondary ai-btn openrouter">CONNECT TO OPENROUTER</button>
+                    <button id="btn-ai-puter" class="secondary ai-btn puter">CONNECT TO PUTER</button>
+                    <button id="btn-ai-groq" class="secondary ai-btn groq">CONNECT TO GROQ</button>
+                </div>
+                <button id="btn-personality" class="secondary">AI PERSONALITY</button>
+                <button id="btn-settings" class="secondary">ROLE SETTINGS</button>
+            </div>
+
+            <div id="role-settings-menu" class="hidden">
+                <h3>FORCE ROLE (PLAY MODE)</h3>
+                <div class="role-toggles">
+                    <div class="setting-item">
+                        <label class="switch">
+                            <input type="checkbox" id="force-scientist">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="setting-label">Scientist</span>
+                    </div>
+                    <div class="setting-item">
+                        <label class="switch">
+                            <input type="checkbox" id="force-detective">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="setting-label">Detective</span>
+                    </div>
+                    <div class="setting-item">
+                        <label class="switch">
+                            <input type="checkbox" id="force-noisemaker">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="setting-label">Noisemaker</span>
+                    </div>
+                    <div class="setting-item">
+                        <label class="switch">
+                            <input type="checkbox" id="force-tracker">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="setting-label">Tracker</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ai-personality-menu" class="hidden">
+                <h3>AI PERSONALITY</h3>
+                <div class="personality-options">
+                    <div class="setting-item">
+                        <label class="radio">
+                            <input type="radio" name="ai-personality" value="average" checked>
+                            <span class="radio-label">Average</span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="radio">
+                            <input type="radio" name="ai-personality" value="interesting">
+                            <span class="radio-label">Interesting</span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="radio">
+                            <input type="radio" name="ai-personality" value="pro">
+                            <span class="radio-label">Pro</span>
+                        </label>
+                    </div>
+                </div>
+                <p class="setting-subtitle" id="personality-desc">Average player intelligence.</p>
+            </div>
+
+            <div class="ai-status" id="ai-status-text">AI Status: Offline (Using Standard Behavior)</div>
+        </div>
+
+        <!-- API Key Modal -->
+        <div id="api-key-modal" class="hidden">
+            <div class="api-key-overlay"></div>
+            <div class="api-key-card">
+                <h2 id="api-key-title">🔑 Connect to OpenRouter</h2>
+                <p id="api-key-desc">Enter your OpenRouter API key to enable AI-powered dialogue, impostor decisions,
+                    and meeting
+                    votes.</p>
+                <p class="api-key-hint" id="api-key-hint">Get your key at <a href="https://openrouter.ai/keys"
+                        target="_blank">openrouter.ai/keys</a></p>
+                <input type="password" id="api-key-input" placeholder="Paste your OpenRouter API key here..."
+                    autocomplete="off">
+                <div class="api-key-buttons">
+                    <button id="api-key-submit">CONNECT</button>
+                    <button id="api-key-cancel" class="secondary">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Scripts in dependency order -->
+    <script src="js/map.js?v=4.0"></script>
+    <script src="js/sprites.js?v=4.0"></script>
+    <script src="js/pathfinding.js?v=4.0"></script>
+    <script src="js/tasks.js?v=4.0"></script>
+    <script src="https://js.puter.com/v2/"></script>
+    <script src="js/gemini.js?v=5.0"></script>
+    <script src="js/dialogue.js?v=4.0"></script>
+    <script src="js/bot.js?v=3.0"></script>
+    <script src="js/impostor.js?v=3.0"></script>
+    <script src="js/ghost.js?v=3.0"></script>
+    <script src="js/player_controls.js?v=3.0"></script>
+    <script src="js/meeting.js?v=3.0"></script>
+    <!-- Player HUD -->
+    <div id="player-hud" class="hidden">
+        <div class="hud-row">
+            <button class="action-btn" id="btn-use">USE (E)</button>
+            <button class="action-btn" id="btn-report">REPORT (R)</button>
+            <button class="action-btn" id="btn-kill">KILL (Q)</button>
+            <button class="action-btn secondary hidden" id="btn-vitals">VITALS</button>
+        </div>
+    </div>
+
+    <!-- Meeting Chat Input -->
+    <div id="meeting-input-container" class="hidden">
+        <input type="text" id="chat-input-box" placeholder="Discuss...">
+        <button id="chat-send-btn">SEND</button>
+    </div>
+
+    <!-- Voting UI -->
+    <div id="voting-overlay" class="hidden">
+        <h2>CAST YOUR VOTE</h2>
+        <div id="vote-buttons-container"></div>
+        <div id="detective-info" class="hidden">
+            <h3>INVESTIGATOR LOGS (<span id="investigation-count">3</span> LEFT)</h3>
+            <div id="investigation-results"></div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

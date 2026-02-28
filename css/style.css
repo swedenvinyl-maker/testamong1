@@ -1,0 +1,751 @@
+/* style.css — Among Us Ghost Observer */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.hidden {
+    display: none !important;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #020408;
+    font-family: 'Outfit', sans-serif;
+    cursor: crosshair;
+}
+
+#gameCanvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Start Screen */
+#start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, #0a0e1a 0%, #020408 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 0.5s ease;
+}
+
+#start-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.start-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.game-title {
+    font-size: 64px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 8px;
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.5), 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 5px;
+}
+
+.game-subtitle {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+}
+
+.start-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+}
+
+button {
+    padding: 15px 40px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+button.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+button.secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.ai-status {
+    margin-top: 15px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.ai-status.connected {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+}
+
+/* AI Provider Buttons */
+.ai-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.ai-btn {
+    width: 100%;
+    padding: 12px 30px !important;
+    font-size: 14px !important;
+    letter-spacing: 1.5px;
+    transition: all 0.25s ease;
+}
+
+.ai-btn.openrouter {
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.ai-btn.openrouter:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.7);
+}
+
+.ai-btn.puter {
+    border-color: rgba(168, 85, 247, 0.4);
+}
+
+.ai-btn.puter:hover {
+    background: rgba(168, 85, 247, 0.2);
+    border-color: rgba(168, 85, 247, 0.7);
+}
+
+.ai-btn.groq {
+    border-color: rgba(249, 115, 22, 0.4);
+}
+
+.ai-btn.groq:hover {
+    background: rgba(249, 115, 22, 0.2);
+    border-color: rgba(249, 115, 22, 0.7);
+}
+
+.ai-btn.active-provider {
+    background: rgba(74, 222, 128, 0.15) !important;
+    border-color: rgba(74, 222, 128, 0.5) !important;
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.2);
+}
+
+/* Selection highlight */
+::selection {
+    background: rgba(59, 130, 246, 0.4);
+}
+
+/* Player Controls */
+#player-hud {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    pointer-events: auto;
+    z-index: 50;
+}
+
+.hud-row {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    width: 70px;
+    height: 70px;
+    background: rgba(30, 30, 30, 0.8);
+    border: 3px solid #ccc;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.2s;
+    user-select: none;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.action-btn:hover {
+    background: rgba(60, 60, 60, 0.9);
+    transform: scale(1.05);
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+    background: #555;
+    border-color: #888;
+}
+
+#meeting-input-container {
+    position: fixed;
+    /* Forced fixed position */
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    display: flex;
+    gap: 12px;
+    background: rgba(10, 10, 20, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 20px;
+    border-radius: 20px;
+    border: 3px solid #3b82f6;
+    pointer-events: auto;
+    z-index: 999999;
+    /* Max z-index */
+    box-shadow: 0 0 60px rgba(59, 130, 246, 0.6);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#chat-input-box {
+    flex-grow: 1;
+    padding: 14px 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 17px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#chat-input-box:focus {
+    border-color: #3b82f6;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+#chat-send-btn {
+    padding: 0 25px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#chat-send-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+#chat-send-btn:active {
+    transform: translateY(0);
+}
+
+/* Role Selection */
+#play-mode-options {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #3b82f6;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 300px;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+    z-index: 1000;
+}
+
+#play-mode-options.hidden {
+    display: none !important;
+}
+
+.role-selection {
+    display: flex;
+    gap: 10px;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 12px !important;
+    font-size: 14px !important;
+}
+
+.role-btn.impostor {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.role-btn.impostor:hover {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+}
+
+/* Hide utility */
+.hidden {
+    display: none !important;
+}
+
+/* Voting UI */
+#voting-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background: rgba(10, 10, 30, 0.95);
+    border: 2px solid #555;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto;
+    z-index: 200;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+#voting-overlay h2 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+#vote-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+
+.player-vote-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.player-vote-card:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.vote-btn {
+    width: 100%;
+    padding: 12px 10px;
+    background: #1a1a1a;
+    color: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    text-transform: none;
+    box-shadow: none;
+    font-size: 14px;
+}
+
+.vote-btn:hover {
+    border-color: #666;
+    background: #222;
+}
+
+.vote-btn.voted {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.vote-color-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.vote-btn.skip-btn {
+    background: #444;
+    width: 100%;
+    max-width: 200px;
+    margin-top: 15px;
+    border-color: #666;
+}
+
+.vote-btn.skip-btn:hover {
+    background: #555;
+}
+
+/* Toggle Switch */
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+    justify-content: center;
+}
+
+.setting-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: .4s;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #3b82f6;
+}
+
+input:checked+.slider:before {
+    transform: translateX(24px);
+}
+
+.slider.round {
+    border-radius: 20px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Role Settings Menu & Personality Menu */
+#role-settings-menu,
+#ai-personality-menu {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 400px;
+}
+
+#role-settings-menu h3,
+#ai-personality-menu h3 {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.role-toggles,
+.personality-options {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.setting-subtitle {
+    margin-top: 15px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+}
+
+/* Radio button custom styling */
+.radio {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio input {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.radio input:checked {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.radio input:checked::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    background: #3b82f6;
+    border-radius: 50%;
+}
+
+.radio-label {
+    color: white;
+    font-weight: 500;
+}
+
+/* Detective Investigation UI */
+#detective-info {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+#detective-info h3 {
+    font-size: 14px;
+    color: #3b82f6;
+    margin-bottom: 10px;
+}
+
+#investigation-results {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.result-tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.investigate-btn {
+    background: #1e3a8a !important;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+    margin-top: 5px !important;
+    display: block !important;
+    width: 100%;
+}
+
+.investigate-btn:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* AI Status Colors */
+.ai-status {
+    transition: color 0.3s ease;
+}
+
+.ai-status.connected {
+    color: #4CAF50 !important;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+/* API Key Modal */
+#api-key-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#api-key-modal.hidden {
+    display: none;
+}
+
+.api-key-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.api-key-card {
+    position: relative;
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 32px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    animation: modal-enter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modal-enter {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.api-key-card h2 {
+    margin-top: 0;
+    font-size: 24px;
+    color: #fff;
+    font-weight: 700;
+}
+
+.api-key-card p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.api-key-hint {
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 3px solid #6366f1;
+    margin-bottom: 20px;
+}
+
+.api-key-hint a {
+    color: #818cf8;
+    text-decoration: none;
+}
+
+.api-key-card input {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+.api-key-card input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.api-key-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.api-key-buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+#api-key-submit {
+    background: #6366f1;
+    color: white;
+}
+
+#api-key-submit:hover {
+    background: #4f46e5;
+}
